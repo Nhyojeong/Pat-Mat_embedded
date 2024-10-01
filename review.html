@@ -57,6 +57,16 @@
             padding: 0.5em;
             margin-bottom: 1em;
         }
+        #logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        #logo a {
+            text-decoration: none; /* 링크의 기본 밑줄 제거 */
+            color: black; /* 글자 색상 */
+            font-size: 1.5em; /* 글자 크기 */
+        }
     </style>
 </head>
 <body>
@@ -64,12 +74,17 @@
     <ul id="problemList">
         <!-- 문제 목록이 여기에 표시됩니다 -->
     </ul>
+    <div id="logo">
+        <a href="index.html">Quiz Maker</a> <!-- 클릭 시 index.html로 이동 -->
+    </div>
     <div class="answer-section" id="answerSection">
         <h2 id="selectedProblem"></h2>
         <input type="text" id="answerInput" placeholder="정답을 입력하세요">
         <button onclick="checkAnswer()">정답 확인</button>
         <p id="resultMessage"></p>
     </div>
+
+    <iframe src="audio.html" style="display:none;"></iframe>
 
     <script>
         let selectedProblem = null;
@@ -126,6 +141,7 @@
 
         // 페이지가 로드되면 문제 목록을 불러옴
         window.onload = loadProblems;
+        
     </script>
 </body>
 </html>

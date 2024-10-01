@@ -35,13 +35,28 @@
         button:hover {
             background-color: #45a049;
         }
+        #logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        #logo a {
+            text-decoration: none; /* 링크의 기본 밑줄 제거 */
+            color: rgb(0, 0, 0); /* 글자 색상 */
+            font-size: 1.5em; /* 글자 크기 */
+        }
     </style>
 </head>
 <body>
     <h1>문제와 정답 기록</h1>
+    <div id="logo">
+        <a href="index.html">Quiz Maker</a> <!-- 클릭 시 index.html로 이동 -->
+    </div>
     <input type="text" id="questionInput" placeholder="문제를 입력하세요">
     <textarea id="answerInput" placeholder="정답을 입력하세요"></textarea>
     <button onclick="saveRecord()">저장하기</button>
+
+    <iframe src="audio.html" style="display:none;"></iframe>
 
     <script>
         // 문제와 답을 저장하는 함수
@@ -63,6 +78,7 @@
             document.getElementById('questionInput').value = '';
             document.getElementById('answerInput').value = '';
         }
+        
     </script>
 </body>
 </html>

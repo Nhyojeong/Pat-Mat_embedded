@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Maker</title>
     <style>
         * {
@@ -19,6 +20,9 @@
         }
         h1 {
             margin-bottom: 2em; /* 제목과 버튼 사이 간격 */
+            font-family: 'Script', sans-serif;
+            font-weight: bold;
+            font-size: 3em;
         }
         .button-container {
             display: flex;
@@ -28,12 +32,12 @@
             text-decoration: none; /* 링크의 기본 밑줄 제거 */
         }
         button {
-            background-color: #ccc;
+            background-color: #ffd7d7;
             font-size: 1.2em;
             padding: 1em 2em;
-            border: none;
+            border: black;
             border-radius: 5px;
-            box-shadow: 1px 1px 2px #fff;
+            box-shadow: 1px 1px 2px #b96565;
             cursor: pointer;
             width: 300px; /* 버튼 너비 */
             height: 100px; /* 버튼 높이 */
@@ -41,7 +45,12 @@
             white-space: nowrap; /* 텍스트 줄바꿈 방지하기 */
         }
         button:hover {
-            background-color: #aaa; /* 호버 시 버튼 색 변경 */
+            background-color: #ffd2d2; /* 호버 시 버튼 색 변경 */
+        }
+        #image {
+            width: 800px; /* 이미지 너비 조정 */
+            height: auto; /* 이미지 높이 자동 조정 */
+            margin-bottom: 4em; /* 이미지와 버튼 사이 간격 */
         }
     </style>
 </head>
@@ -49,6 +58,9 @@
     <div id="logo">
         <h1>Quiz Maker</h1>
     </div>
+
+    <img id="image" src="study.gif" alt="Quiz Maker Image">
+    
     <div class="button-container">
         <!-- 버튼 1: 기록 페이지 -->
         <a href="record.html">
@@ -63,5 +75,7 @@
             <button>저장된 기록 확인</button>
         </a>
     </div>
+
+    <iframe src="audio.html" style="display:none;"></iframe>
 </body>
 </html>
