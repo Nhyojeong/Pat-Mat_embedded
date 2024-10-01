@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>복습하기</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            margin-bottom: 1em;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 300px;
+            border: 1px solid #ccc;
+            padding: 1em;
+            margin-bottom: 1em;
+        }
+        li {
+            background-color: #f9f9f9;
+            margin-bottom: 0.5em;
+            padding: 0.5em;
+            border-radius: 5px;
+            box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+        li:hover {
+            background-color: #e0e0e0;
+        }
+        button {
+            padding: 0.5em 1em;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .answer-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 1em;
+        }
+        .answer-section input {
+            padding: 0.5em;
+            margin-bottom: 1em;
+        }
+    </style>
+</head>
+<body>
+    <h1>복습하기</h1>
+    <ul id="problemList">
+        <!-- 문제 목록이 여기에 표시됩니다 -->
+    </ul>
+    <div class="answer-section" id="answerSection">
+        <h2 id="selectedProblem"></h2>
+        <input type="text" id="answerInput" placeholder="정답을 입력하세요">
+        <button onclick="checkAnswer()">정답 확인</button>
+        <p id="resultMessage"></p>
+    </div>
+
+    <script>
+        let selectedProblem = null;
+
+        // 페이지 로드 시 저장된 문제 목록을 불러옴
+        function loadProblems() {
+            const problemList = document.getElementById('problemList');
+            problemList.innerHTML = ''; // 기존 목록 초기화
+
+            // localStorage에 저장된 모든 문제 불러오기
+            if (localStorage.length === 0) {
+                problemList.innerHTML = '<li>저장된 문제가 없습니다.</li>';
+            } else {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    const record = JSON.parse(localStorage.getItem(key));
+
+                    // 문제를 목록에 추가
+                    const listItem = document.createElement('li');
+                    listItem.textContent = record.question; // 문제만 표시
+                    listItem.onclick = function() {
+                        selectProblem(record);
+                    };
+                    problemList.appendChild(listItem);
+                }
+            }
+        }
+
+        // 문제 선택 함수
+        function selectProblem(record) {
+            selectedProblem = record;
+            document.getElementById('selectedProblem').textContent = record.question;
+            document.getElementById('answerSection').style.display = 'flex';
+            
+            // 문제 목록을 숨김
+            document.getElementById('problemList').style.display = 'none';
+        }
+
+        // 정답 확인 함수
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answerInput').value;
+            if (userAnswer.trim() === '') {
+                alert('정답을 입력하세요.');
+                return;
+            }
+
+            // 저장된 정답과 비교
+            if (userAnswer === selectedProblem.answer) {
+                document.getElementById('resultMessage').textContent = '정답입니다!';
+            } else {
+                document.getElementById('resultMessage').textContent = '오답입니다. 다시 시도하세요.';
+            }
+        }
+
+        // 페이지가 로드되면 문제 목록을 불러옴
+        window.onload = loadProblems;
+    </script>
+</body>
+</html>
