@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>저장된 기록 확인</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            margin-bottom: 1em;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 300px;
+            border: 1px solid #ccc;
+            padding: 1em;
+            margin-bottom: 1em;
+        }
+        li {
+            background-color: #f9f9f9;
+            margin-bottom: 0.5em;
+            padding: 0.5em;
+            border-radius: 5px;
+            box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 0.5em 1em;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .clear-btn {
+            background-color: #f44336;
+        }
+        .clear-btn:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+    <h1>저장된 기록</h1>
+    <ul id="recordList">
+        <!-- 저장된 기록이 여기에 표시됩니다 -->
+    </ul>
+    <button class="clear-btn" onclick="clearRecords()">기록 삭제하기</button>
+
+    <script>
+        // 페이지 로드 시 저장된 기록을 불러오는 함수
+        function loadRecords() {
+            const recordList = document.getElementById('recordList');
+            recordList.innerHTML = ''; // 기존 기록 삭제
+
+            // localStorage에 저장된 모든 키-값 쌍을 불러옴
+            if (localStorage.length === 0) {
+                recordList.innerHTML = '<li>저장된 기록이 없습니다.</li>';
+            } else {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    const value = localStorage.getItem(key);
+
+                    // 기록을 목록에 추가
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${key}: ${value}`;
+                    recordList.appendChild(listItem);
+                }
+            }
+        }
+
+        // 기록 삭제 함수
+        function clearRecords() {
+            if (confirm('정말로 모든 기록을 삭제하시겠습니까?')) {
+                localStorage.clear(); // 모든 기록 삭제
+                loadRecords(); // 화면 갱신
+            }
+        }
+
+        // 페이지 로드 시 기록을 불러옴
+        window.onload = loadRecords;
+    </script>
+</body>
+</html>

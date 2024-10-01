@@ -38,6 +38,7 @@
             width: 300px; /* 버튼 너비 */
             height: 100px; /* 버튼 높이 */
             text-align: center;
+            white-space: nowrap; /* 텍스트 줄바꿈 방지하기 */
         }
         button:hover {
             background-color: #aaa; /* 호버 시 버튼 색 변경 */
@@ -50,12 +51,16 @@
     </div>
     <div class="button-container">
         <!-- 버튼 1 -->
-        <a href="https://github.com/Nhyojeong/Pat-Mat_embedded" target="_blank">
+        <a href="record.html">
             <button>문제 기록 & 유사문제</button>
         </a>
         <!-- 버튼 2 -->
         <a href="https://github.com/Nhyojeong/Pat-Mat_embedded" target="_blank">
             <button>복습하기</button>
+        </a>
+        <!-- 버튼 3: 저장된 기록 확인 -->
+        <a href="view_records.html">
+        <button>저장된 기록 확인</button>
         </a>
     </div>
 </body>

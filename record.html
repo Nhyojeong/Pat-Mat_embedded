@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기록 저장</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            margin-bottom: 1em;
+        }
+        textarea {
+            width: 300px;
+            height: 150px;
+            padding: 1em;
+            margin-bottom: 1em;
+        }
+        button {
+            padding: 0.5em 1em;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>기록 저장하기</h1>
+    <textarea id="recordInput" placeholder="저장할 내용을 입력하세요"></textarea>
+    <button onclick="saveRecord()">저장하기</button>
+
+    <script>
+        function saveRecord() {
+            const input = document.getElementById('recordInput').value;
+            if (input) {
+                // 현재 시간을 키로 하여 기록을 로컬 스토리지에 저장
+                const timestamp = new Date().toISOString();
+                localStorage.setItem(timestamp, input);
+                alert('기록이 저장되었습니다!');
+                document.getElementById('recordInput').value = ''; // 입력 필드 비우기
+            } else {
+                alert('내용을 입력하세요.');
+            }
+        }
+    </script>
+</body>
+</html>
