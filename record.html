@@ -19,21 +19,29 @@
         input, textarea {
             margin-bottom: 1em;
             padding: 0.5em;
-            width: 300px;
+            width: 700px;
             border: 1px solid #ccc;
             border-radius: 5px;
+        }
+        textarea {
+            height: 200px; /* 세로 높이를 200px로 설정 */
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        input{
+            font-size :1em;
         }
         button {
             padding: 0.5em 1em;
             font-size: 1em;
             cursor: pointer;
-            background-color: #4CAF50;
+            background-color: #dbb7b7;
             color: white;
             border: none;
             border-radius: 5px;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #c49e9e;
         }
         #logo {
             position: absolute;
@@ -48,12 +56,12 @@
     </style>
 </head>
 <body>
-    <h1>문제와 정답 기록</h1>
+    <h1>내 문제 기록하기</h1>
     <div id="logo">
         <a href="index.html">Quiz Maker</a> <!-- 클릭 시 index.html로 이동 -->
     </div>
-    <input type="text" id="questionInput" placeholder="문제를 입력하세요">
-    <textarea id="answerInput" placeholder="정답을 입력하세요"></textarea>
+    <textarea id="questionInput" placeholder="문제를 입력하세요"></textarea>
+    <input type="text" id="answerInput" placeholder="정답을 입력하세요">
     <button onclick="saveRecord()">저장하기</button>
 
     <iframe src="audio.html" style="display:none;"></iframe>

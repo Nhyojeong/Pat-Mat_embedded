@@ -39,13 +39,13 @@
             padding: 0.5em 1em;
             font-size: 1em;
             cursor: pointer;
-            background-color: #4CAF50;
+            background-color: #ebbfbf;
             color: white;
             border: none;
             border-radius: 5px;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #cca0a0;
         }
         .answer-section {
             display: none;
@@ -53,9 +53,19 @@
             align-items: center;
             margin-top: 1em;
         }
-        .answer-section input {
+        .answer-section textarea, .answer-section input {
             padding: 0.5em;
+            width: 700px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
             margin-bottom: 1em;
+        }
+        textarea {
+            height: 100px; /* 문제 입력칸의 높이 조정 */
+            font-size: 1.5em;
+        }
+        input {
+            height: 40px; /* 답 입력칸의 높이 조정 */
         }
         #logo {
             position: absolute;
@@ -63,9 +73,9 @@
             left: 10px;
         }
         #logo a {
-            text-decoration: none; /* 링크의 기본 밑줄 제거 */
-            color: black; /* 글자 색상 */
-            font-size: 1.5em; /* 글자 크기 */
+            text-decoration: none;
+            color: black;
+            font-size: 1.5em;
         }
     </style>
 </head>
@@ -78,8 +88,8 @@
         <a href="index.html">Quiz Maker</a> <!-- 클릭 시 index.html로 이동 -->
     </div>
     <div class="answer-section" id="answerSection">
-        <h2 id="selectedProblem"></h2>
-        <input type="text" id="answerInput" placeholder="정답을 입력하세요">
+        <textarea id="questionInput" readonly></textarea> <!-- 문제 영역 -->
+        <input type="text" id="answerInput" placeholder="정답을 입력하세요"> <!-- 답 입력 영역 -->
         <button onclick="checkAnswer()">정답 확인</button>
         <p id="resultMessage"></p>
     </div>
@@ -106,7 +116,7 @@
                     const listItem = document.createElement('li');
                     listItem.textContent = record.question; // 문제만 표시
                     listItem.onclick = function() {
-                        selectProblem(record);
+                        selectProblem(record, key); // 문제 클릭 시 key도 함께 전달
                     };
                     problemList.appendChild(listItem);
                 }
@@ -114,14 +124,20 @@
         }
 
         // 문제 선택 함수
-        function selectProblem(record) {
-            selectedProblem = record;
-            document.getElementById('selectedProblem').textContent = record.question;
+        // 문제 선택 함수
+        function selectProblem(record, key) {
+            selectedProblem = { ...record, key }; // 선택한 문제와 key 저장
+            document.getElementById('questionInput').value = record.question; // 문제를 텍스트 영역에 표시
             document.getElementById('answerSection').style.display = 'flex';
-            
+    
+            // 이전 문제의 결과 메시지 초기화
+            document.getElementById('resultMessage').textContent = '';  // 결과 메시지 초기화
+            document.getElementById('answerInput').value = ''; // 이전 답변 입력 내용 초기화
+    
             // 문제 목록을 숨김
             document.getElementById('problemList').style.display = 'none';
         }
+
 
         // 정답 확인 함수
         function checkAnswer() {
@@ -134,9 +150,22 @@
             // 저장된 정답과 비교
             if (userAnswer === selectedProblem.answer) {
                 document.getElementById('resultMessage').textContent = '정답입니다!';
+                // 정답일 경우 localStorage에서 해당 문제 삭제
+                localStorage.removeItem(selectedProblem.key);
+                setTimeout(() => {
+                    alert('정답인 문제를 삭제하고 문제 목록으로 돌아갑니다.');
+                    resetReview();
+                }, 1000);
             } else {
                 document.getElementById('resultMessage').textContent = '오답입니다. 다시 시도하세요.';
             }
+        }
+
+        // 복습을 마치고 문제 목록으로 돌아가는 함수
+        function resetReview() {
+            document.getElementById('answerSection').style.display = 'none';
+            document.getElementById('problemList').style.display = 'block';
+            loadProblems(); // 문제 목록 다시 로드
         }
 
         // 페이지가 로드되면 문제 목록을 불러옴

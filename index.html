@@ -19,7 +19,7 @@
             padding-top: 10vh; /* 위쪽으로 10vh만큼 이동 */
         }
         h1 {
-            margin-bottom: 2em; /* 제목과 버튼 사이 간격 */
+            margin-bottom: 1em; /* 제목과 버튼 사이 간격 */
             font-family: 'Script', sans-serif;
             font-weight: bold;
             font-size: 3em;
@@ -50,7 +50,12 @@
         #image {
             width: 800px; /* 이미지 너비 조정 */
             height: auto; /* 이미지 높이 자동 조정 */
-            margin-bottom: 4em; /* 이미지와 버튼 사이 간격 */
+            margin-bottom: 2em; /* 이미지와 버튼 사이 간격 */
+        }
+        #time {
+            margin-bottom: 1em;
+            font-size: 2em;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -60,7 +65,9 @@
     </div>
 
     <img id="image" src="study.gif" alt="Quiz Maker Image">
-    
+
+    <div id="time"></div> <!-- 시간 표시 영역 -->
+
     <div class="button-container">
         <!-- 버튼 1: 기록 페이지 -->
         <a href="record.html">
@@ -77,5 +84,23 @@
     </div>
 
     <iframe src="audio.html" style="display:none;"></iframe>
+
+    <script>
+        // 현재 시간을 가져와서 업데이트하는 함수
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('time').textContent = timeString;
+        }
+
+        // 1초마다 시간을 업데이트
+        setInterval(updateTime, 1000);
+
+        // 페이지가 로드되면 시간을 즉시 표시
+        updateTime();
+    </script>
 </body>
 </html>
