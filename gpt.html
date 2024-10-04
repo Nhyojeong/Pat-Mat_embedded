@@ -57,20 +57,38 @@
 
     <div id="result"></div>
 
+    <script src="app.js"></script> <!-- app.js를 불러옴 -->
     <script>
+        // GPT에서 받은 문제 저장할 변수
+        let gptQuestion = '';
+
         // 로컬 저장소에서 방금 기록한 문제를 가져옴
         const lastKey = localStorage.key(localStorage.length - 1);
         const lastRecord = JSON.parse(localStorage.getItem(lastKey));
         const question = lastRecord.question;
 
-        // GPT API로 유사 문제 생성 (app.js의 fetchAIResponse 사용)
+        // GPT API로 유사 문제 생성
         async function getGPTQuestion() {
-            const gptResponse = await fetchAIResponse(`다음 질문에 유사한 문제를 만들어주세요: ${question}`);
-            document.getElementById('gpt-question').textContent = gptResponse;
+            try {
+                console.log('Fetching GPT question...');
+                const gptResponse = await fetchAIResponse(`다음 질문에 유사한 문제를 만들어주세요: ${question}`);
+                console.log('GPT response:', gptResponse);
+                
+                if (gptResponse) {
+                    document.getElementById('gpt-question').textContent = gptResponse;
+                    gptQuestion = gptResponse; // GPT에서 받은 문제를 변수에 저장
+                } else {
+                    document.getElementById('gpt-question').textContent = 'GPT 문제 생성에 실패했습니다.';
+                }
+            } catch (error) {
+                console.error('GPT 문제 생성 중 오류:', error);
+                document.getElementById('gpt-question').textContent = 'GPT 문제 생성 중 오류가 발생했습니다.';
+            }
         }
 
         // 페이지 로드 시 GPT 문제 생성
         getGPTQuestion();
+
 
         // 사용자가 답을 제출했을 때
         function checkAnswer() {
@@ -80,8 +98,8 @@
                 return;
             }
 
-            // 정답 검증 또는 처리 로직 추가
-            if (userAnswer !== '정답') { // 임시로 '정답'으로 확인
+            // 정답 검증 또는 처리 로직 추가 (현재 임시로 '정답'으로 확인)
+            if (userAnswer !== '정답') { 
                 const save = confirm('틀렸습니다. 이 문제를 저장하시겠습니까?');
                 if (save) {
                     const timestamp = new Date().getTime();
@@ -89,6 +107,10 @@
                     alert('문제가 저장되었습니다.');
                 }
             }
+
+            // 입력 필드를 초기화
+            document.getElementById('user-answer').value = '';
+
             // 원래 기록 페이지로 돌아가기
             window.location.href = 'record.html';
         }
