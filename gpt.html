@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT 문제 생성</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            margin-bottom: 1em;
+        }
+        p {
+            font-size: 1.2em;
+            margin-bottom: 1em;
+        }
+        button {
+            padding: 0.5em 1em;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #dbb7b7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 0.5em;
+        }
+        button:hover {
+            background-color: #c49e9e;
+        }
+        #logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        #logo a {
+            text-decoration: none;
+            color: rgb(0, 0, 0);
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <h1>GPT 문제</h1>
+    <div id="logo">
+        <a href="index.html">Quiz Maker</a>
+    </div>
+
+    <p id="gpt-question">GPT가 문제를 생성 중입니다...</p>
+    <input type="text" id="user-answer" placeholder="정답을 입력하세요">
+    <button onclick="checkAnswer()">제출</button>
+
+    <div id="result"></div>
+
+    <script>
+        // 로컬 저장소에서 방금 기록한 문제를 가져옴
+        const lastKey = localStorage.key(localStorage.length - 1);
+        const lastRecord = JSON.parse(localStorage.getItem(lastKey));
+        const question = lastRecord.question;
+
+        // GPT API로 유사 문제 생성 (app.js의 fetchAIResponse 사용)
+        async function getGPTQuestion() {
+            const gptResponse = await fetchAIResponse(`다음 질문에 유사한 문제를 만들어주세요: ${question}`);
+            document.getElementById('gpt-question').textContent = gptResponse;
+        }
+
+        // 페이지 로드 시 GPT 문제 생성
+        getGPTQuestion();
+
+        // 사용자가 답을 제출했을 때
+        function checkAnswer() {
+            const userAnswer = document.getElementById('user-answer').value.trim();
+            if (userAnswer === '') {
+                alert('정답을 입력하세요.');
+                return;
+            }
+
+            // 정답 검증 또는 처리 로직 추가
+            if (userAnswer !== '정답') { // 임시로 '정답'으로 확인
+                const save = confirm('틀렸습니다. 이 문제를 저장하시겠습니까?');
+                if (save) {
+                    const timestamp = new Date().getTime();
+                    localStorage.setItem(timestamp, JSON.stringify({ question: gptQuestion, answer: userAnswer }));
+                    alert('문제가 저장되었습니다.');
+                }
+            }
+            // 원래 기록 페이지로 돌아가기
+            window.location.href = 'record.html';
+        }
+    </script>
+</body>
+</html>
