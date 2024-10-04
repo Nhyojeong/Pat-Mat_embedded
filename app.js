@@ -1,6 +1,5 @@
 // OpenAI API 정보
-const apiKey = 'keynum';  // 여기에 발급받은 API 키를 사용
-const apiEndpoint = '주소';
+
 
 
 async function fetchAIResponse(prompt) {
