@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPT 문제 생성</title>
+    <title>GPT 문제 풀이</title>
     <style>
         body {
             display: flex;
@@ -24,14 +24,21 @@
             padding: 0.5em 1em;
             font-size: 1em;
             cursor: pointer;
-            background-color: #dbb7b7;
+            background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 5px;
             margin: 0.5em;
         }
         button:hover {
-            background-color: #c49e9e;
+            background-color: #45a049;
+        }
+        input {
+            font-size: 1.2em;
+            padding: 0.5em;
+            margin: 0.5em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
         #logo {
             position: absolute;
@@ -40,88 +47,85 @@
         }
         #logo a {
             text-decoration: none;
-            color: rgb(0, 0, 0);
+            color: black;
             font-size: 1.5em;
         }
     </style>
 </head>
 <body>
-    <h1>GPT 문제</h1>
+    <h1>GPT 문제 풀이</h1>
     <div id="logo">
-        <a href="index.html">Quiz Maker</a>
+        <a href="index.html">Home</a>
     </div>
 
     <p id="gpt-question">GPT가 문제를 생성 중입니다...</p>
     <input type="text" id="user-answer" placeholder="정답을 입력하세요">
-    <button onclick="checkAnswer()">제출</button>
+    <button id="submit-answer">제출</button>
 
     <div id="result"></div>
 
-    <script src="app.js"></script> <!-- app.js를 불러옴 -->
+    <script src="app.js"></script>
     <script>
-        // GPT에서 받은 문제와 정답을 저장할 변수
+        // GPT에서 받은 문제를 저장할 변수
         let gptQuestion = '';
-        let correctAnswer = '';  // GPT에서 생성된 정답을 저장할 변수
-    
-        // 로컬 저장소에서 방금 기록한 문제를 가져옴
+
+        // 이전 페이지에서 저장된 문제 가져오기
         const lastKey = localStorage.key(localStorage.length - 1);
         const lastRecord = JSON.parse(localStorage.getItem(lastKey));
-        const question = lastRecord.question;
-    
-        // GPT API로 유사 문제 및 정답 생성
-        async function getGPTQuestion() {
-            try {
-                console.log('Fetching GPT question...');
-    
-                const gptResponse = await fetchAIResponse(`다음 문제의 유형과 유사한 문제를 하나 내주고, 그 문제의 정답도 함께 제공해 주세요. 문제의 답을 4지선다로 제시해주고 거기서 숫자를 입력하면 맞는 걸로 해주세요. 예를 들어 답이 1이면 그냥 숫자 '1'만 입력해도, 1뒤에 번이나 다른 단어가 붙어도 맞는 답인걸로. 문제: ${question}`);
-                console.log('GPT response:', gptResponse);
-    
-                // 응답이 null인지 체크
-                if (gptResponse) {
-                    // 응답을 그대로 사용 (문자열로 반환될 가능성이 있기 때문)
-                    gptQuestion = gptResponse.split('문제: ')[1].split('정답: ')[0].trim();
-                    correctAnswer = gptResponse.split('정답: ')[0].trim();
-    
-                    document.getElementById('gpt-question').textContent = gptQuestion;
-                } else {
-                    document.getElementById('gpt-question').textContent = 'GPT 문제 생성에 실패했습니다.';
-                }
-            } catch (error) {
-                console.error('GPT 문제 생성 중 오류:', error);
-                document.getElementById('gpt-question').textContent = 'GPT 문제 생성 중 오류가 발생했습니다.';
-            }
+        const savedText = lastRecord ? lastRecord.question : '';
+
+        // GPT에게 저장된 문제에 대한 새로운 문제 요청
+        async function generateGPTQuestion() {
+            const aiPrompt = `최근 입력한 영어 본문을 기반으로 한국 수능 수준의 영어 문제 하나만 내줘. 본문은 다시 언급하지 않아도 돼. 정답을 숫자 1~4 중에 하나를 선택할 수 있게 내줘 제발: "${savedText}"`;
+            const relatedQuestion = await fetchAIResponse(aiPrompt);
+            gptQuestion = relatedQuestion;
+
+            // 문제 표시
+            document.getElementById('gpt-question').textContent = relatedQuestion
+                ? `문제: ${relatedQuestion}`
+                : '문제가 포함되지 않았습니다.';
         }
-    
-        // 페이지 로드 시 GPT 문제 생성
-        getGPTQuestion();
-    
-        // 사용자가 답을 제출했을 때
-        function checkAnswer() {
+
+        // 페이지 로드 시 GPT로부터 문제 생성
+        window.onload = generateGPTQuestion;
+
+        // 정답 제출 시 처리
+        document.getElementById('submit-answer').addEventListener('click', async () => {
             const userAnswer = document.getElementById('user-answer').value.trim();
-            if (userAnswer === '') {
+
+            if (!userAnswer) {
                 alert('정답을 입력하세요.');
                 return;
             }
-    
-            // GPT에서 제공한 정답과 비교
-            if (userAnswer !== correctAnswer) {  // 정답을 GPT에서 제공한 정답과 비교
-                const save = confirm('틀렸습니다. 이 문제를 저장하시겠습니까?');
-                if (save) {
-                    const timestamp = new Date().getTime();
-                    localStorage.setItem(timestamp, JSON.stringify({ question: gptQuestion, answer: userAnswer }));
-                    alert('문제가 저장되었습니다.');
-                }
-            } else {
+
+            // GPT에게 사용자의 정답 확인 요청
+            const checkPrompt = `문제: ${gptQuestion} 사용자의 답: ${userAnswer}. 문제의 정답에 대해서 사용자가 입력한 답이 맞는지 확인해줘. 사용자의 답이 문제에 대한 답 안에 들어가면 '정답입니다'라고 말해줘 아니면 '틀림'으로 말해줘.`;
+            const checkResponse = await fetchAIResponse(checkPrompt);
+
+            // GPT 응답에 "정답입니다"가 포함되어 있는지 확인
+            if (checkResponse.includes('정답입니다')) {
                 alert('정답입니다!');
+                document.getElementById('result').textContent = '정답입니다!';
+                document.getElementById('user-answer').value = ''; // 입력 필드 초기화
+                window.location.href = 'record.html';  // 기록 페이지로 이동
+            } else {
+                alert('틀렸습니다.');
+                const tryAgain = confirm('다시 풀어보시겠습니까?');
+                if (!tryAgain) {
+                    const save = confirm('이 문제를 저장하시겠습니까?');
+                    if (save) {
+                        const timestamp = new Date().getTime();
+                        const record = { question: gptQuestion, answer: userAnswer };
+                        localStorage.setItem(timestamp, JSON.stringify(record));
+                        alert('문제가 저장되었습니다.');
+                    }
+                    window.location.href = 'record.html';  // 기록 페이지로 이동
+                } else {
+                    document.getElementById('user-answer').value = ''; // 다시 풀게 할 때 입력 필드 초기화
+                }
             }
-    
-            // 입력 필드를 초기화
-            document.getElementById('user-answer').value = '';
-    
-            // 원래 기록 페이지로 돌아가기
-            window.location.href = 'record.html';
-        }
+        });
+
     </script>
-    
 </body>
 </html>

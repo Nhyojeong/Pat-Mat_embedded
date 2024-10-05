@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>문제 기록</title>
+    <title>본문 작성</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@900&display=swap" rel="stylesheet"> <!-- Grandstander 추가 -->
@@ -61,29 +61,29 @@
     </style>
 </head>
 <body>
-    <h1>내 문제 기록하기</h1>
+    <h1>영어 본문 기록하기</h1>
     <div id="logo">
         <a href="index.html">Quiz Maker</a>
     </div>
-    <textarea id="questionInput" placeholder="문제를 입력하세요"></textarea>
-    <input type="text" id="answerInput" placeholder="정답을 입력하세요">
-    <button onclick="saveRecord()">저장하기</button>
 
-    <iframe src="audio.html" style="display:none;"></iframe>
+    <!-- 영어 본문 입력란 -->
+    <textarea id="textInput" placeholder="영어 본문을 입력하세요"></textarea>
+
+    <!-- 저장하기 버튼 -->
+    <button onclick="saveText()">저장하기</button>
 
     <script>
-        function saveRecord() {
-            const question = document.getElementById('questionInput').value;
-            const answer = document.getElementById('answerInput').value;
+        function saveText() {
+            const text = document.getElementById('textInput').value;
 
-            if (question.trim() === '' || answer.trim() === '') {
-                alert('문제와 정답을 모두 입력하세요.');
+            if (text.trim() === '') {
+                alert('영어 본문을 입력하세요.');
                 return;
             }
 
-            const timestamp = new Date().getTime();
-            const record = { question, answer };
-            localStorage.setItem(timestamp, JSON.stringify(record));
+            // 최신 본문을 "latest_text"로 저장
+            const record = { question: text };
+            localStorage.setItem('latest_text', JSON.stringify(record));
 
             // 저장 후 gpt.html로 이동
             window.location.href = 'gpt.html';
@@ -91,3 +91,4 @@
     </script>
 </body>
 </html>
+

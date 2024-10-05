@@ -1,6 +1,3 @@
-// OpenAI API 정보
-
-
 
 async function fetchAIResponse(prompt) {
     const requestOptions = {
@@ -10,7 +7,7 @@ async function fetchAIResponse(prompt) {
             'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-            model: "gpt-4",  // GPT 모델
+            model: "gpt-4o",  // GPT 모델
             messages: [{ role: "user", content: prompt }],
             temperature: 0.8,
             max_tokens: 150,
@@ -23,7 +20,18 @@ async function fetchAIResponse(prompt) {
     try {
         const response = await fetch(apiEndpoint, requestOptions);
         const data = await response.json();
-        return data.choices[0].message.content;
+
+        // API에서 반환된 전체 객체를 확인
+        console.log('전체 응답:', data);
+
+        // choices 배열의 첫 번째 요소를 확인하여 메시지 또는 텍스트가 있는지 확인
+        if (data.choices && data.choices.length > 0) {
+            console.log('Choices 배열:', data.choices);  // Choices 배열 확인
+            return data.choices[0].message ? data.choices[0].message.content : data.choices[0].text;
+        } else {
+            console.error('Choices 배열이 비어 있습니다.');
+            return null;
+        }
     } catch (error) {
         console.error('OpenAI API 호출 오류:', error);
         return null;
