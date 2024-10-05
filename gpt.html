@@ -74,16 +74,22 @@
         const lastRecord = JSON.parse(localStorage.getItem(lastKey));
         const savedText = lastRecord ? lastRecord.question : '';
 
+        console.log('Saved Text:', savedText);
+
         // GPT에게 저장된 문제에 대한 새로운 문제 요청
         async function generateGPTQuestion() {
-            const aiPrompt = `최근 입력한 영어 본문을 기반으로 한국 수능 수준의 영어 문제 하나만 내줘. 본문은 다시 언급하지 않아도 돼. 정답을 숫자 1~4 중에 하나를 선택할 수 있게 내줘 제발: "${savedText}"`;
+            const aiPrompt = `최근 입력한 영어 본문에 대한 한국 수능 수준의 영어 문제 하나만 내줘. 본문은 다시 언급하지 않아도 돼. 그리고 정답은 화면에 노출하지 않아도 돼. 정답을 숫자 1~4 중에 하나를 선택할 수 있게 내줘.: "${savedText}"`;
             const relatedQuestion = await fetchAIResponse(aiPrompt);
             gptQuestion = relatedQuestion;
+            console.log("문제 :", gptQuestion);
 
             // 문제 표시
-            document.getElementById('gpt-question').textContent = relatedQuestion
-                ? `문제: ${relatedQuestion}`
+            document.getElementById('gpt-question').textContent = gptQuestion
+                ? `문제: ${gptQuestion}`
                 : '문제가 포함되지 않았습니다.';
+
+            //await fetchCorrectAnswer(relatedQuestion);
+
         }
 
         // 페이지 로드 시 GPT로부터 문제 생성
@@ -99,8 +105,12 @@
             }
 
             // GPT에게 사용자의 정답 확인 요청
-            const checkPrompt = `문제: ${gptQuestion} 사용자의 답: ${userAnswer}. 문제의 정답에 대해서 사용자가 입력한 답이 맞는지 확인해줘. 사용자의 답이 문제에 대한 답 안에 들어가면 '정답입니다'라고 말해줘 아니면 '틀림'으로 말해줘.`;
+            const checkPrompt = `본문 : ${savedText} 문제 : ${gptQuestion} 사용자의 답: ${userAnswer}. 본문에 대한 문제의 정답에 대해서 사용자가 입력한 답이 맞는지 확인해줘. 사용자의 답이 문제에 대한 답 안에 들어가면 '정답입니다'라고 말해줘 아니면 '틀림'으로 말해줘.`;
             const checkResponse = await fetchAIResponse(checkPrompt);
+            const CorrectAnswer = `본문 : ${savedText} 문제 : ${gptQuestion}. 해당 문제에 대한 답이 뭐지? 다른 언어 없이 1부터 4까지의 숫자로만 표현해.`;
+            const CCorrectanswer = await fetchAIResponse(CorrectAnswer);
+            realanswer=CCorrectanswer;
+            console.log("실제 답 :", CCorrectanswer);
 
             // GPT 응답에 "정답입니다"가 포함되어 있는지 확인
             if (checkResponse.includes('정답입니다')) {
@@ -115,7 +125,12 @@
                     const save = confirm('이 문제를 저장하시겠습니까?');
                     if (save) {
                         const timestamp = new Date().getTime();
-                        const record = { question: gptQuestion, answer: userAnswer };
+                        const record = {
+                        question: gptQuestion,
+                        answer: realanswer,
+                        passage: savedText // 저장된 본문 추가
+                        };
+
                         localStorage.setItem(timestamp, JSON.stringify(record));
                         alert('문제가 저장되었습니다.');
                     }

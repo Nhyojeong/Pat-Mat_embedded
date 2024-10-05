@@ -93,6 +93,7 @@
         <a href="index.html">Quiz Maker</a> <!-- 클릭 시 index.html로 이동 -->
     </div>
     <div class="answer-section" id="answerSection">
+        <textarea id="passageInput" readonly></textarea> <!-- 본문을 표시하는 영역 -->
         <textarea id="questionInput" readonly></textarea> <!-- 문제 영역 -->
         <input type="text" id="answerInput" placeholder="정답을 입력하세요"> <!-- 답 입력 영역 -->
         <button onclick="checkAnswer()">정답 확인</button>
@@ -129,24 +130,24 @@
         }
 
         // 문제 선택 함수
-        // 문제 선택 함수
         function selectProblem(record, key) {
             selectedProblem = { ...record, key }; // 선택한 문제와 key 저장
+            document.getElementById('passageInput').value = record.passage; // 본문을 텍스트 영역에 표시
             document.getElementById('questionInput').value = record.question; // 문제를 텍스트 영역에 표시
             document.getElementById('answerSection').style.display = 'flex';
-    
+
             // 이전 문제의 결과 메시지 초기화
             document.getElementById('resultMessage').textContent = '';  // 결과 메시지 초기화
             document.getElementById('answerInput').value = ''; // 이전 답변 입력 내용 초기화
-    
+
             // 문제 목록을 숨김
             document.getElementById('problemList').style.display = 'none';
         }
 
-
         // 정답 확인 함수
         function checkAnswer() {
             const userAnswer = document.getElementById('answerInput').value;
+            console.log("답 : ",selectedProblem.answer);
             if (userAnswer.trim() === '') {
                 alert('정답을 입력하세요.');
                 return;
