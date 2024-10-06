@@ -81,9 +81,12 @@
                 return;
             }
 
+            localStorage.removeItem('latest_text');
+
             // 최신 본문을 "latest_text"로 저장
             const record = { question: text };
             localStorage.setItem('latest_text', JSON.stringify(record));
+            console.log(JSON.parse(localStorage.getItem('latest_text')));
 
             // 저장 후 gpt.html로 이동
             window.location.href = 'gpt.html';

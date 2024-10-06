@@ -24,14 +24,14 @@
             padding: 0.5em 1em;
             font-size: 1em;
             cursor: pointer;
-            background-color: #4CAF50;
+            background-color: #dbb7b7;
             color: white;
             border: none;
             border-radius: 5px;
             margin: 0.5em;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #c49e9e;
         }
         input {
             font-size: 1.2em;
@@ -55,7 +55,7 @@
 <body>
     <h1>GPT 문제 풀이</h1>
     <div id="logo">
-        <a href="index.html">Home</a>
+        <a href="index.html">Quiz Maker</a>
     </div>
 
     <p id="gpt-question">GPT가 문제를 생성 중입니다...</p>
@@ -63,6 +63,7 @@
     <button id="submit-answer">제출</button>
 
     <div id="result"></div>
+    <iframe src="audio.html" style="display:none;"></iframe>
 
     <script src="app.js"></script>
     <script>
@@ -70,9 +71,9 @@
         let gptQuestion = '';
 
         // 이전 페이지에서 저장된 문제 가져오기
-        const lastKey = localStorage.key(localStorage.length - 1);
-        const lastRecord = JSON.parse(localStorage.getItem(lastKey));
-        const savedText = lastRecord ? lastRecord.question : '';
+        const latestTextRecord = localStorage.getItem('latest_text');
+    const lastRecord = latestTextRecord ? JSON.parse(latestTextRecord) : null;
+    const savedText = lastRecord ? lastRecord.question : '';
 
         console.log('Saved Text:', savedText);
 
@@ -146,17 +147,16 @@
                 }
             }
             // gpt.html에서 본문을 사용한 후 삭제하기
-            const record = JSON.parse(localStorage.getItem('latest_text'));
+        });
+
+        const record = JSON.parse(localStorage.getItem('latest_text'));
             if (record) {
-                const savedText = record.question;
                 console.log('Saved Text:', savedText);
                 // GPT 관련 로직 실행
 
                 // 사용 후 localStorage에서 삭제
                 localStorage.removeItem('latest_text');
             }
-        });
-
     </script>
 </body>
 </html>
