@@ -89,15 +89,14 @@
 <body>
     <h1>복습하기</h1>
     <ul id="problemList">
-        <!-- 문제 목록이 여기에 표시됩니다 -->
     </ul>
     <div id="logo">
-        <a href="index.html">Quiz Maker</a> <!-- 클릭 시 index.html로 이동 -->
+        <a href="index.html">Quiz Maker</a> 
     </div>
     <div class="answer-section" id="answerSection">
-        <textarea id="passageInput" readonly></textarea> <!-- 본문을 표시하는 영역 -->
-        <textarea id="questionInput" readonly></textarea> <!-- 문제 영역 -->
-        <input type="text" id="answerInput" placeholder="정답을 입력하세요"> <!-- 답 입력 영역 -->
+        <textarea id="passageInput" readonly></textarea> 
+        <textarea id="questionInput" readonly></textarea> 
+        <input type="text" id="answerInput" placeholder="정답을 입력하세요"> 
         <button onclick="checkAnswer()">정답 확인</button>
         <p id="resultMessage"></p>
     </div>
@@ -108,9 +107,9 @@
         let selectedProblem = null;
 
         // 페이지 로드 시 저장된 문제 목록을 불러옴
-        function loadProblems() {
+        function loadgpt() {
             const problemList = document.getElementById('problemList');
-            problemList.innerHTML = ''; // 기존 목록 초기화
+            problemList.innerHTML = ''; 
 
             // localStorage에 저장된 모든 문제 불러오기
             if (localStorage.length === 0) {
@@ -155,6 +154,11 @@
                 return;
             }
 
+            if (userAnswer>4){
+                const errror=confirm('1~4까지의 숫자만 입력하세요.');
+                return;
+            }
+
             // 저장된 정답과 비교
             if (userAnswer === selectedProblem.answer) {
                 document.getElementById('resultMessage').textContent = '정답입니다!';
@@ -162,7 +166,7 @@
                 localStorage.removeItem(selectedProblem.key);
                 setTimeout(() => {
                     alert('정답인 문제를 삭제하고 문제 목록으로 돌아갑니다.');
-                    resetReview();
+                    resetreview();
                 }, 1000);
             } else {
                 document.getElementById('resultMessage').textContent = '오답입니다. 다시 시도하세요.';
@@ -170,14 +174,14 @@
         }
 
         // 복습을 마치고 문제 목록으로 돌아가는 함수
-        function resetReview() {
+        function resetreview() {
             document.getElementById('answerSection').style.display = 'none';
             document.getElementById('problemList').style.display = 'block';
-            loadProblems(); // 문제 목록 다시 로드
+            loadgpt(); // 문제 목록 다시 로드
         }
 
         // 페이지가 로드되면 문제 목록을 불러옴
-        window.onload = loadProblems;
+        window.onload = loadgpt;
         
     </script>
 </body>

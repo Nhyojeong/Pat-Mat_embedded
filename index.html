@@ -81,15 +81,12 @@
     <div id="time"></div> <!-- 시간 표시 영역 -->
 
     <div class="button-container">
-        <!-- 버튼 1: 기록 페이지 -->
         <a href="record.html">
-            <button>본문 문제 풀이</button>
+            <button>본문 문제 풀기</button>
         </a>
-        <!-- 버튼 2: 복습 페이지 -->
         <a href="review.html">
             <button>복습하기</button>
         </a>
-        <!-- 버튼 3: 저장된 기록 확인 -->
         <a href="view_records.html">
             <button>저장된 기록 확인</button>
         </a>
@@ -98,7 +95,7 @@
     <iframe src="audio.html" style="display:none;"></iframe>
 
     <script>
-        // 현재 시간을 가져와서 업데이트하는 함수
+        // 현재 시간 가져와서 업데이트
         function updateTime() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
@@ -108,10 +105,9 @@
             document.getElementById('time').textContent = timeString;
         }
 
-        // 1초마다 시간을 업데이트
+        // 1초마다 시간 업데이트
         setInterval(updateTime, 1000);
 
-        // 페이지가 로드되면 시간을 즉시 표시
         updateTime();
     </script>
 </body>

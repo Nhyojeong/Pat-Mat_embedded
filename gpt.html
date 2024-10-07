@@ -78,17 +78,17 @@
 
         // 이전 페이지에서 저장된 문제 가져오기
         const latestTextRecord = localStorage.getItem('latest_text');
-    const lastRecord = latestTextRecord ? JSON.parse(latestTextRecord) : null;
-    const savedText = lastRecord ? lastRecord.question : '';
+        const lastRecord = latestTextRecord ? JSON.parse(latestTextRecord) : null;
+        const savedText = lastRecord ? lastRecord.question : '';
 
         console.log('Saved Text:', savedText);
 
-        function formatQuestionWithLineBreaks(question) {
+        function numberenter(question) {
             return question.replace(/([1-4]\.)/g, '<br>$1');
         }
 
         // GPT에게 저장된 문제에 대한 새로운 문제 요청
-        async function generateGPTQuestion() {
+        async function Newgptquestion() {
             const aiPrompt = `최근 입력한 영어 본문에 대한 한국 수능 수준의 영어 문제 하나만 내줘. 본문은 다시 언급하지 않아도 돼. 그리고 정답은 화면에 노출하지 않아도 돼. 정답을 숫자 1~4 중에 하나를 선택할 수 있게 내줘. 형식을 1. 2. 3. 4. 이런식으로: "${savedText}"`;
             const relatedQuestion = await fetchAIResponse(aiPrompt);
             gptQuestion = relatedQuestion;
@@ -96,15 +96,13 @@
 
             // 문제 표시
             document.getElementById('gpt-question').innerHTML = gptQuestion
-                ? `문제: ${formatQuestionWithLineBreaks(gptQuestion)}`
+                ? `문제: ${numberenter(gptQuestion)}`
                 : '문제가 포함되지 않았습니다.';
-
-            //await fetchCorrectAnswer(relatedQuestion);
 
         }
 
         // 페이지 로드 시 GPT로부터 문제 생성
-        window.onload = generateGPTQuestion;
+        window.onload = Newgptquestion;
 
         // 정답 제출 시 처리
         document.getElementById('submit-answer').addEventListener('click', async () => {
@@ -116,13 +114,13 @@
             }
 
             if (userAnswer>4){
-                const errror=confirm('1~4까지의 숫자만 입력하시오.');
+                const errror=confirm('1~4까지의 숫자만 입력하세요.');
                 return;
             }
 
             // GPT에게 사용자의 정답 확인 요청
-            const checkPrompt = `본문 : ${savedText} 문제 : ${gptQuestion} 사용자의 답: ${userAnswer}. 본문에 대한 문제의 정답에 대해서 사용자가 입력한 답이 맞는지 확인해줘. 사용자의 답이 문제에 대한 답 안에 들어가면 '정답입니다'라고 말해줘 아니면 '틀림'으로 말해줘.`;
-            const checkResponse = await fetchAIResponse(checkPrompt);
+            const checkcorrect = `본문 : ${savedText} 문제 : ${gptQuestion} 사용자의 답: ${userAnswer}. 본문에 대한 문제의 정답에 대해서 사용자가 입력한 답이 맞는지 확인해줘. 사용자의 답이 문제에 대한 답 안에 들어가면 '정답입니다'라고 말해줘 아니면 '틀림'으로 말해줘.`;
+            const checkResponse = await fetchAIResponse(checkcorrect);
             const CorrectAnswer = `본문 : ${savedText} 문제 : ${gptQuestion}. 해당 문제에 대한 답이 뭐지? 다른 언어 없이 1부터 4까지의 숫자로만 표현해.`;
             const CCorrectanswer = await fetchAIResponse(CorrectAnswer);
             realanswer=CCorrectanswer;
@@ -136,13 +134,13 @@
                 window.location.href = 'record.html';  // 기록 페이지로 이동
             } else {
                 alert('틀렸습니다.');
-                const save = confirm('이 문제를 저장하시겠습니까?');
+                const save = confirm('이 문제를 저장하겠습니까?');
                 if (save) {
                     const timestamp = new Date().getTime();
                     const record = {
                         question: gptQuestion,
                         answer: realanswer,
-                        passage: savedText // 저장된 본문 추가
+                        passage: savedText 
                     };
 
                     localStorage.setItem(timestamp, JSON.stringify(record));
@@ -150,20 +148,18 @@
                 }
 
                 // 저장 여부와 상관없이 다시 풀어보기를 물어보기
-                const tryAgain = confirm('다시 풀어보시겠습니까?');
+                const tryAgain = confirm('다시 풀어보겠습니까?');
                 if (!tryAgain) {
                     window.location.href = 'record.html';  // 기록 페이지로 이동
                 } else {
                     document.getElementById('user-answer').value = ''; // 다시 풀게 할 때 입력 필드 초기화
                 }
             }
-            // gpt.html에서 본문을 사용한 후 삭제하기
         });
 
         const record = JSON.parse(localStorage.getItem('latest_text'));
             if (record) {
                 console.log('Saved Text:', savedText);
-                // GPT 관련 로직 실행
 
                 // 사용 후 localStorage에서 삭제
                 localStorage.removeItem('latest_text');
