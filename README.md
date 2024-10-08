@@ -1,5 +1,12 @@
 # Pat-Mat_embedded
 
-#### 메인 수정 금지!
-임시에 수정한거 커밋 업데이트 하고 다 완성 됐을때 최종으로 메인에 과정이랑, 완성시킨거 업로드 시킬거임
-중간에 메인에 푸쉬, 수정하면 좀 복잡해질지도!
+#### API키 관련
+apikey.js를 .gitignore에 숨겨 두었고, 따로 apikey.js 파일을 제작하여
+```
+const config={
+    apikey: "API 코드 작성"
+}
+
+export default config;
+```
+형식을 따른다. 
