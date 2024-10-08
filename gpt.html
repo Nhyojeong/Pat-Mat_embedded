@@ -70,9 +70,9 @@
 
     <div id="result"></div>
     <iframe src="audio.html" style="display:none;"></iframe>
-
-    <script src="app.js"></script>
-    <script>
+    <script type="module" src="app.js"></script>
+    <script type="module">
+        import { fetchAIResponse} from './app.js';
         // GPT에서 받은 문제를 저장할 변수
         let gptQuestion = '';
 
@@ -123,7 +123,7 @@
             const checkResponse = await fetchAIResponse(checkcorrect);
             const CorrectAnswer = `본문 : ${savedText} 문제 : ${gptQuestion}. 해당 문제에 대한 답이 뭐지? 다른 언어 없이 1부터 4까지의 숫자로만 표현해.`;
             const CCorrectanswer = await fetchAIResponse(CorrectAnswer);
-            realanswer=CCorrectanswer;
+            //realanswer=CCorrectanswer;
             console.log("실제 답 :", CCorrectanswer);
 
             // GPT 응답에 "정답입니다"가 포함되어 있는지 확인
@@ -139,7 +139,7 @@
                     const timestamp = new Date().getTime();
                     const record = {
                         question: gptQuestion,
-                        answer: realanswer,
+                        answer: CCorrectanswer,
                         passage: savedText 
                     };
 

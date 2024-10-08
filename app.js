@@ -1,5 +1,9 @@
+import config from './apikey.js';
 
-async function fetchAIResponse(prompt) {
+const apiKey=config.apikey;
+const apiEndpoint = 'https://api.openai.com/v1/chat/completions';
+
+export async function fetchAIResponse(prompt) {
     const requestOptions = {
         method: 'POST',
         headers: {
